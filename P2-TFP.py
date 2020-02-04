@@ -2,7 +2,7 @@ import tensorflow as tf
 import tensorflow_probability as tfp
 import matplotlib.pyplot as plt
 
-print(tf.__version__, tfp.__version__)
+print(tf.__version__, tfp.__version__, '/nWorks with tensorflow 2.0.0 and tensorflow_probability 0.8.0')
 tfd = tfp.distributions
 prob_true = 0.05  # remember, this is unknown.
 N = 1500
