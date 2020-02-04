@@ -3,7 +3,7 @@ import scipy.stats as stats
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
-    p_true = 0.05  # remember, this is unknown.
+    p_true = 0.05
     N = 1500
     occurrences = stats.bernoulli.rvs(p_true, size=N)
     with pm.Model() as model:
