@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     p_true = 0.05
-    N = 1500
+    N = 1000
     occurrences = stats.bernoulli.rvs(p_true, size=N)
     with pm.Model() as model:
         p = pm.Uniform('p', lower=0, upper=1)
