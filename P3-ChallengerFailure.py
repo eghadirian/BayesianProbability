@@ -3,6 +3,7 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt 
 import theano.tensor as tt 
+from scipy.stats.mstats import mquantiles
 
 path = os.path.join('datasets','challenger')
 np.set_printoptions(precision=3, suppress=True)
@@ -16,6 +17,10 @@ plt.scatter(challenger_data[:, 0], challenger_data[:, 1], s=75, color="k",
 # fitting sigmoid function
 temperature = challenger_data[:,0]
 D = challenger_data[:,1]
+
+def logistic(x, beta, alpha=0):
+    return 1./(1. + np.exp(np.dot(beta, x) + alpha))
+
 if __name__ == '__main__': # needs to be here bc some issues wit pm3(?)
     with pm.Model() as model:
         beta = pm.Normal('beta', mu=0., tau=0.001, testval=0.)
@@ -24,8 +29,8 @@ if __name__ == '__main__': # needs to be here bc some issues wit pm3(?)
         observed = pm.Bernoulli('bernoulli_obs', p, observed=D)
         start = pm.find_MAP()
         step = pm.Metropolis()
-        trace = pm.sample(120000, step = step, start=start)
-        burned_trace = trace[100000::2] # 100k burnin, 2 to break the autocorrelation (if any)
+        trace = pm.sample(120, step = step, start=start)
+        burned_trace = trace[100::2] # 100k burnin, 2 to break the autocorrelation (if any)
 
     alpha_samples = burned_trace["alpha"][:, None]
     beta_samples = burned_trace["beta"][:, None]
@@ -35,4 +40,16 @@ if __name__ == '__main__': # needs to be here bc some issues wit pm3(?)
     plt.figure()
     plt.hist(beta_samples, histtype='stepfilled', bins=35, alpha=0.85,
             label=r"posterior of $\beta$", color="#7A68A6", normed=True)
+
+    t = np.linspace(temperature.min() - 5, temperature.max()+5, 50)[:, None]
+    p_t = logistic(t.transpose(), beta_samples, alpha_samples)
+    mean_prob_t = p_t.mean(axis=0)
+    # 95% confidence interval
+    qs = mquantiles(p_t, [0.025, 0.975], axis=0)
+    plt.figure()
+    plt.fill_between(t[:, 0], *qs, alpha=0.7,
+                    color="#7A68A6")
+    plt.plot(t[:, 0], qs[0], label="95% CI", color="#7A68A6", alpha=0.7)
+    plt.plot(t, mean_prob_t, lw=1, ls="--", color="k",
+            label="average posterior \nprobability of defect")
     plt.show()
