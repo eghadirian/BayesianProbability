@@ -29,8 +29,8 @@ if __name__ == '__main__': # needs to be here bc some issues wit pm3(?)
         observed = pm.Bernoulli('bernoulli_obs', p, observed=D)
         start = pm.find_MAP()
         step = pm.Metropolis()
-        trace = pm.sample(120, step = step, start=start)
-        burned_trace = trace[100::2] # 100k burnin, 2 to break the autocorrelation (if any)
+        trace = pm.sample(120000, step = step, start=start)
+        burned_trace = trace[100000::2] # 100k burnin, 2 to break the autocorrelation (if any)
 
     alpha_samples = burned_trace["alpha"][:, None]
     beta_samples = burned_trace["beta"][:, None]
@@ -52,4 +52,11 @@ if __name__ == '__main__': # needs to be here bc some issues wit pm3(?)
     plt.plot(t[:, 0], qs[0], label="95% CI", color="#7A68A6", alpha=0.7)
     plt.plot(t, mean_prob_t, lw=1, ls="--", color="k",
             label="average posterior \nprobability of defect")
+    temp = input('At what temperature (degF) you will be launching?')
+    prob_ = logistic(float(temp), beta_samples, alpha_samples)
+    plt.xlim(0., 1.)
+    plt.ylim()
+    plt.hist(prob_, bins=1000, normed=True, histtype='stepfilled')
+    plt.title("Posterior distribution of probability of defect, given $t = {}$".format(temp))
+    plt.xlabel("probability of defect occurring in O-ring")
     plt.show()
