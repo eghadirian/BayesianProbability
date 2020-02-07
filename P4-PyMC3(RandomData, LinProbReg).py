@@ -30,10 +30,10 @@ if __name__=='__main__':
     alpha_samples = burned_trace["alpha"][:, None]
     beta_samples = burned_trace["beta"][:, None]
     plt.figure()
-    plt.hist(alpha_samples, histtype='stepfilled',
+    plt.hist(alpha_samples, histtype='stepfilled', bins=35, alpha=0.85,
             label=r"posterior of $\alpha$", color="#A60628", normed=True)
     plt.figure()
-    plt.hist(beta_samples, histtype='stepfilled',
+    plt.hist(beta_samples, histtype='stepfilled', bins=35, alpha=0.85,
             label=r"posterior of $\beta$", color="#7A68A6", normed=True)
     plt.show()
     print('slope: {}, intercept: {}'.format(slope, intercept))
