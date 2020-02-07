@@ -17,8 +17,8 @@ def linear(x, slope, inter=0.):
 
 if __name__=='__main__':
     with pm.Model() as model:
-        alpha = pm.Normal('alpha', mu=0., sigma=0.1, testval=0.)
-        beta = pm.Normal('beta', mu=0., sigma=0.1, testval=0.)
+        alpha = pm.Normal('alpha', mu=0., sigma=1., testval=0.)
+        beta = pm.Normal('beta', mu=0., sigma=1., testval=0.)
         sigma = pm.HalfCauchy('sigma', beta=10., testval=1.)
         y_ = pm.Deterministic('y', linear(x, alpha, beta))
         observed = pm.Normal('bernoulli_obs', mu=y_, sigma=sigma, observed=y)
@@ -36,3 +36,4 @@ if __name__=='__main__':
     plt.hist(beta_samples, histtype='stepfilled',
             label=r"posterior of $\beta$", color="#7A68A6", normed=True)
     plt.show()
+    print('slope: {}, intercept: {}'.format(slope, intercept))
