@@ -27,13 +27,16 @@ if __name__ == '__main__': # needs to be here bc some issues wit pm3(?)
         alpha = pm.Normal('alpha', mu=0., tau=0.001, testval=0.)
         p = pm.Deterministic('p', 1./(1.+tt.exp(beta*temperature+alpha)))
         observed = pm.Bernoulli('bernoulli_obs', p, observed=D)
+        # artificially generate credible data sets, from POSTERIOR (not the prior)
+        simulated_data = pm.Bernoulli('simulated-data', p, shape=p.tag.test_value.shape)
         start = pm.find_MAP()
-        step = pm.Metropolis()
+        step = pm.Metropolis(vars=[p])
         trace = pm.sample(120000, step = step, start=start)
         burned_trace = trace[100000::2] # 100k burnin, 2 to break the autocorrelation (if any)
 
     alpha_samples = burned_trace["alpha"][:, None]
     beta_samples = burned_trace["beta"][:, None]
+    simulations = burned_trace["bernoulli_sim"]
     plt.figure()
     plt.hist(alpha_samples, histtype='stepfilled', bins=35, alpha=0.85,
             label=r"posterior of $\alpha$", color="#A60628", normed=True)
@@ -59,4 +62,10 @@ if __name__ == '__main__': # needs to be here bc some issues wit pm3(?)
     plt.hist(prob_, bins=1000, normed=True, histtype='stepfilled')
     plt.title("Posterior distribution of probability of defect, given $t = {}$".format(temp))
     plt.xlabel("probability of defect occurring in O-ring")
+    plt.figure()
+    plt.scatter(temperature, simulations[1000, :], color="k",
+                s=50, alpha=0.6)
     plt.show()
+
+    
+    
