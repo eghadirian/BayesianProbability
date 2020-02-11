@@ -1,6 +1,7 @@
 import numpy as np 
 import pymc3 as pm 
 import matplotlib.pyplot as plt 
+import scipy.optimize as sop
 
 seed = np.random.seed(42)
 x = np.random.rand(100)
@@ -35,5 +36,30 @@ if __name__=='__main__':
     plt.figure()
     plt.hist(beta_samples, histtype='stepfilled', bins=35, alpha=0.85,
             label=r"posterior of $\beta$", color="#7A68A6", normed=True)
-    plt.show()
     print('slope: {}, intercept: {}'.format(slope, intercept))
+    def showdown_loss(guess, true_, risk, tol = 0.1):
+        loss = np.zeros_like(true_)
+        ix = true_ < guess
+        loss[~ix] = np.abs(guess - true_[~ix])
+        close_mask = [abs(true_ - guess) <= tol]
+        loss[close_mask] = -2*true_[close_mask]
+        loss[ix] = risk
+        return loss
+    guesses = np.linspace(0, 5, 100) 
+    risks = np.logspace(0.001, 2.0, num=5)
+    expected_loss = lambda guess, risk: showdown_loss(guess, burned_trace["alpha"], risk).mean()
+    for risk in risks:
+        results = [expected_loss(guess, risk) for guess in guesses]
+        _min_results = sop.fmin(expected_loss, 1, args=(risk,), disp = False)
+        plt.plot(guesses, results, label = "%d"%risk)
+        plt.scatter(_min_results, 0, s = 60, label = "%d"%risk)
+        plt.vlines(_min_results, 0, 100, linestyles="--")
+        print("minimum at risk %d: %.2f" % (risk, _min_results))
+    plt.title("Expected loss & Bayes actions of different guesses, \n \
+    various risk-levels of overestimating")
+    plt.legend(loc="upper left", scatterpoints = 1, title = "Bayes action at risk:")
+    plt.xlabel("slope guess")
+    plt.ylabel("expected loss")
+    plt.xlim(0, 5)
+    plt.ylim(-10, 110)
+    plt.show()
