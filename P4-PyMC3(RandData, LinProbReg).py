@@ -3,6 +3,7 @@ import pymc3 as pm
 import matplotlib.pyplot as plt 
 import scipy.optimize as sop
 
+# Mock data generator
 seed = np.random.seed(42)
 x = np.random.rand(100)
 x.sort()
@@ -13,9 +14,11 @@ y = slope * x + intercept + rr
 plt.figure()
 plt.plot(x, y)
 
+# Regression function
 def linear(x, slope, inter=0.):
     return (slope * x) + inter
 
+# Bayesian inference
 if __name__=='__main__':
     with pm.Model() as model:
         alpha = pm.Normal('alpha', mu=0., sigma=1., testval=0.)
@@ -27,7 +30,6 @@ if __name__=='__main__':
         step = pm.Metropolis()
         trace = pm.sample(120000, step=step, start=start)
         burned_trace = trace[100000::2]
-    # inference
     alpha_samples = burned_trace["alpha"][:, None]
     beta_samples = burned_trace["beta"][:, None]
     plt.figure()
