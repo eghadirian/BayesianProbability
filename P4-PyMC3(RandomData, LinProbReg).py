@@ -27,7 +27,7 @@ if __name__=='__main__':
         step = pm.Metropolis()
         trace = pm.sample(120000, step=step, start=start)
         burned_trace = trace[100000::2]
-
+    # inference
     alpha_samples = burned_trace["alpha"][:, None]
     beta_samples = burned_trace["beta"][:, None]
     plt.figure()
@@ -37,6 +37,8 @@ if __name__=='__main__':
     plt.hist(beta_samples, histtype='stepfilled', bins=35, alpha=0.85,
             label=r"posterior of $\beta$", color="#7A68A6", normed=True)
     print('slope: {}, intercept: {}'.format(slope, intercept))
+
+    # define loss for a bayesian action inference
     def showdown_loss(guess, true_, risk, tol = 0.1):
         loss = np.zeros_like(true_)
         ix = true_ < guess
@@ -45,6 +47,7 @@ if __name__=='__main__':
         loss[close_mask] = -2*true_[close_mask]
         loss[ix] = risk
         return loss
+        
     guesses = np.linspace(0, 5, 100) 
     risks = np.logspace(0.001, 2.0, num=5)
     expected_loss = lambda guess, risk: showdown_loss(guess, burned_trace["alpha"], risk).mean()
