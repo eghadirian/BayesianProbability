@@ -29,6 +29,7 @@ if __name__=='__main__':
         step = pm.Metropolis()
         trace = pm.sample(120000, step=step, start=start)
         burned_trace = trace[100000::2]
+    alpha_samples = burned_trace["alpha"][:, None]
     param1_samples = burned_trace["param"][:, None]
     param2_samples = burned_trace["param2"][:, None]
     plt.figure()
