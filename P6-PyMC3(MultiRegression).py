@@ -27,7 +27,9 @@ if __name__=='__main__':
                              sigma=sigma, observed=tt.stack([y1, y2]))
         start = pm.find_MAP()
         step = pm.Metropolis()
-        trace = pm.sample(120000, step=step, start=start)
+        trace = pm.sample(10000, step=step, start=start)
+        step = pm.NUTS()
+        trace = pm.sample(110000, step=step)
         burned_trace = trace[100000::2]
     alpha_samples = burned_trace["alpha"][:, None]
     param1_samples = burned_trace["param"][:, None]
