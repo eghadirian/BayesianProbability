@@ -23,7 +23,7 @@ if __name__=='__main__':
         param2 = pm.HalfNormal('param2', sd=5.)
         y_1 = pm.Deterministic('y', linear(x, alpha, beta, param1))
         y_2 = pm.Deterministic('y2', linear(x, alpha, beta, param2))
-        observed = pm.Normal('bernoulli_obs', tt.stack([y_1, y_2]),\
+        observed = pm.Normal('obs', tt.stack([y_1, y_2]),\
                              sigma=sigma, observed=tt.stack([y1, y2]))
         start = pm.find_MAP()
         step = pm.Metropolis()

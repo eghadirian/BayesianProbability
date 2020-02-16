@@ -23,7 +23,7 @@ if __name__=='__main__':
         beta = pm.Normal('beta', mu=0., sigma=1., testval=0.)
         sigma = pm.HalfCauchy('sigma', beta=10., testval=1.)
         y_ = pm.Deterministic('y', linear(x, alpha, beta))
-        observed = pm.Normal('bernoulli_obs', mu=y_, sigma=sigma, observed=y)
+        observed = pm.Normal('obs', mu=y_, sigma=sigma, observed=y)
         start = pm.find_MAP()
         step = pm.Metropolis()
         trace = pm.sample(120000, step=step, start=start)
