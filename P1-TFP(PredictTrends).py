@@ -57,6 +57,6 @@ tau_samples = tf.floor(posterior_tau * tf.cast(tf.size(count_data)), tf.float32)
 N = tf.shape(tau_samples)[0]
 expected_texts_per_day = tf.zeros(n_count_data)
 plt.hist(lambda_1_samples, histtype='stepfilled', bins=30, alpha=0.85,
-         label=r"posterior of $\lambda_1$", color=TFColor[0], density=True)
+         label=r"posterior of $\lambda_1$", color='red', density=True)
 plt.hist(lambda_2_samples, histtype='stepfilled', bins=30, alpha=0.85,
-         label=r"posterior of $\lambda_2$", color=TFColor[6], density=True)
+         label=r"posterior of $\lambda_2$", color='green', density=True)

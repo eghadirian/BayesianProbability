@@ -12,7 +12,7 @@ intercept = np.random.rand(1)
 rr =  np.random.rand(100)-0.5
 y = slope * x + intercept + rr
 plt.figure()
-plt.plot(x, y)
+plt.plot(x, y, 'x')
 
 # Regression function
 def linear(x, slope, inter=0.):
