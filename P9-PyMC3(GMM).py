@@ -21,5 +21,5 @@ if __name__=='__main__':
         x_observed = pm.NormalMixture('x_observed', w, mu, tau=tau, observed=x_data)
         trace=pm.sample(5000, n_init=10000, tune=1000, random_seed=42)
     plt.figure()
-    plt.hist(trace['mu'])
+    plt.hist(trace['mu'], bins=50)
 plt.show()
