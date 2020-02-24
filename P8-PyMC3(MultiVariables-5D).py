@@ -33,7 +33,7 @@ if __name__=='__main__':
         beta_1 = pm.Normal('beta1', mu=0., sigma=1., testval=0.)
         gamma_1 = pm.Gamma('gamma1', alpha=5., beta=5.)
         y1_det, y2_det, y3_det = \
-        encapsulate(x_1, x_2, alpha_1, alpha_2, alpha_3, beta_1, gamma_1)
+                encapsulate(x_1, x_2, alpha_1, alpha_2, alpha_3, beta_1, gamma_1)
         y1 = pm.Deterministic('y1', y1_det)
         y2 = pm.Deterministic('y2', y2_det)
         y3 = pm.Deterministic('y3', y3_det)
