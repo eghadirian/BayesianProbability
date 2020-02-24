@@ -39,7 +39,7 @@ if __name__=='__main__':
         y3 = pm.Deterministic('y3', y3_det)
         observed = pm.Normal('obs', tt.stack([y1, y2, y3]),\
             observed=tt.stack([y_1, y_2, y_3]))
-        trace = pm.sample(120000, step=pm.NUTS(), start=pm.find_MAP())
+        trace = pm.sample(120000, step=pm.NUTS(), start=pm.find_MAP(), cores=2)
         burned_trace = trace[100000::2]
     alpha1_samples = burned_trace["alpha1"][:, None]
     alpha2_samples = burned_trace["alpha2"][:, None]
