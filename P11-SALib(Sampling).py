@@ -15,6 +15,8 @@ for i, P in enumerate(param_values):
     z[i] = evaluate_model(P)
 
 Si = sobol.analyze(problem, z)
-print('First-Order Sensitivity:{}\nTotal-Order Sensitivity{}'\
-    .format(Si['S1'],Si['ST']))
+print('First-Order Sensitivity:\n{}\
+    \nSecond-Order Sensitivity:\n{}\
+    \nTotal-Order Sensitivity:\n{}'\
+    .format(Si['S1'],Si['S2'],Si['ST']))
 
