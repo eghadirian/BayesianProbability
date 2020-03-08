@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import pymc3 as pm 
 from google.colab import files
 
+# from https://www.worldometers.info/coronavirus/
 uploaded = files.upload()
 df = pd.read_excel('Book1.xlsx').fillna(0)
 number = df['Total Cases']
@@ -15,8 +16,8 @@ for i in range(len(number)):
 
 if __name__=='__main__':
     with pm.Model() as modl:
-        p = pm.Normal('Death Rate', mu=0.02, sigma=0.1)
-        sigma = pm.Normal('sigma', mu=0.01, sigma=0.1)
+        p = pm.Normal('Death Rate', mu=0.02, sigma=0.005)
+        sigma = pm.Gamma('sigma', 1., 1.)
         obs = pm.Normal('observation', mu=p, sigma=sigma, observed=occurances)
         trace = pm.sample(200000, step=pm.Metropolis())
         burned_trace = trace[150000::2]
