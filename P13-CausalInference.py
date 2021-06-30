@@ -1,4 +1,4 @@
-from causalimpact import CausalImpact 
+from causalimpact import CausalImpact, plot, summary
 import pandas as pd 
 import numpy as np 
 import matplotlib.pyplot as plt
@@ -11,5 +11,8 @@ data.iloc[25:30, 0] += np.arange(5, 0, -1) #do an impact
 pre_period = [0, 24]
 post_period = [25, 29]
 
+# GPU acceleration helps a lot
 ci = CausalImpact(data=data, pre_period=pre_period, post_period=post_period)
+ci.plot()
+ci.summary()
 
