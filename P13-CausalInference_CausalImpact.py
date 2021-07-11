@@ -13,6 +13,6 @@ post_period = [25, 29]
 
 # GPU acceleration helps a lot
 ci = CausalImpact(data=data, pre_period=pre_period, post_period=post_period)
-ci.plot()
-ci.summary()
+ci.plot
+ci.summary
 
